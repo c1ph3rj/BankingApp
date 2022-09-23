@@ -76,11 +76,13 @@ class UserInterface {
             accountType = (accountTypeInput == 1) ? "Savings" : (accountTypeInput == 2) ? "Current" : "unknown";
             if (accountType.equals(db.get(i).getAccountType())) {
                 clearScreen();
-                deposit(i);
-                changePin(i);
-                checkBalance(i);
-                withdrawal(i);
-
+                System.out.println("Select one of the option below to continue :");
+                System.out.printf("1.Deposit\n2.Withdraw\n3.CheckBalance\n4.ChangePin\npress Q/q to quit.%n");
+                String option = scanner.next();
+                    changePin(i);
+                    deposit(i);
+                    checkBalance(i);
+                    withdrawal(i);
             } else {
                 response = "Enter a valid account type";
                 System.out.println(response);
