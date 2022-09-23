@@ -4,8 +4,8 @@ import org.json.simple.parser.*;
 import java.util.*;
 
 class UserInterface{
-    private Scanner scanner = new Scanner(System.in);
-    private static List<UserDetails> db = new ArrayList<>();
+    private final Scanner scanner = new Scanner(System.in);
+    private static final List<UserDetails> db = new ArrayList<>();
     private void clearScreen(){
         System.out.print("\033[H\033[2J");
         System.out.flush();
@@ -13,7 +13,7 @@ class UserInterface{
     }
 
     private void userDatabase() throws IOException, ParseException {
-        Object obj = new JSONParser().parse(new FileReader("D:\\projects\\Java\\intellij\\BankingApp\\src\\test\\java\\Database.json"));
+        Object obj = new JSONParser().parse(new FileReader("C:\\Users\\Temp-user3\\IdeaProjects\\BankingApp\\src\\test\\java\\Database.json"));
         //FileWriter fileWriter = new FileWriter("D:\\projects\\Java\\intellij\\BankingApp\\src\\test\\java\\Database.json");
         JSONArray DB = (JSONArray) obj;
 
@@ -31,7 +31,7 @@ class UserInterface{
     }
 
     void userVerification() {
-        boolean userverified = false;
+        boolean userVerified = false;
         clearScreen();
         System.out.println("Enter your name :");
         String userName = scanner.nextLine();
@@ -57,24 +57,24 @@ class UserInterface{
                         noOfAttempts++;
                     }
                 }
-                userverified = true;
+                userVerified = true;
             }
         }
-        if(userverified == false)
+        if(!userVerified)
             System.out.println("No users found");
     }
     private void userAccountOperations( int i) {
 
         System.out.println("Enter account type: \nPress 1 - Savings account\nPress 2 - Current Account\n>>>");
         String accountType;
+        String response ;
         do{
             int accountTypeInput = scanner.nextInt();
             accountType = (accountTypeInput == 1) ? "Savings" : (accountTypeInput == 2) ? "Current" : "unknown";
             if (accountType.equals(db.get(i).getAccountType())) {
                 clearScreen();
                 System.out.println("Enter the amount to be withdraw\n(note: only in multiples of 100)\n>>>");
-                String response ="Invalid Amount! , Try again.";
-                while(response =="Invalid Amount! , Try again."){
+                do{
                     int amount = scanner.nextInt();
                     if (amount < db.get(i).getBalance() && ((amount % 100) == 0)
                             && amount >= 100) {
@@ -82,7 +82,7 @@ class UserInterface{
                         db.get(i).setBalance(amount);
                         clearScreen();
                         System.out.println(
-                                "Do you want to display the balance :\nPress 1 - display blance\nPress 2 - cancel");
+                                "Do you want to display the balance :\nPress 1 - display balance\nPress 2 - cancel");
                         do{
                             int balanceDisplay = scanner.nextInt();
                             response = (balanceDisplay == 1)
@@ -95,14 +95,15 @@ class UserInterface{
                         System.out.println(response);
                     }
 
-                }
-            } else
-                System.out.println("Enter a valid account type");
-        }while(accountType == "unknown");
+                }while(response.equals("Invalid Amount! , Try again."));
+            } else{
+                response = "Enter a valid account type";
+                System.out.println(response);
+            }
+        }while(accountType.equals("unknown")|| response.equals("Enter a valid account type"));
     }
 
     UserInterface() throws IOException, ParseException {
-//        dataBase();
         userDatabase();
         userVerification();
     }
