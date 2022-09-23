@@ -31,7 +31,7 @@ class UserInterface{
     }
 
     void userVerification() {
-        boolean userverified = false;
+        boolean userVerified = false;
         clearScreen();
         System.out.println("Enter your name :");
         String userName = scanner.nextLine();
@@ -57,10 +57,10 @@ class UserInterface{
                         noOfAttempts++;
                     }
                 }
-                userverified = true;
+                userVerified = true;
             }
         }
-        if(userverified == false)
+        if(!userVerified)
             System.out.println("No users found");
     }
     private void userAccountOperations( int i) {
@@ -73,8 +73,8 @@ class UserInterface{
             if (accountType.equals(db.get(i).getAccountType())) {
                 clearScreen();
                 System.out.println("Enter the amount to be withdraw\n(note: only in multiples of 100)\n>>>");
-                String response ="Invalid Amount! , Try again.";
-                while(response =="Invalid Amount! , Try again."){
+                String response;
+                do{
                     int amount = scanner.nextInt();
                     if (amount < db.get(i).getBalance() && ((amount % 100) == 0)
                             && amount >= 100) {
@@ -82,7 +82,7 @@ class UserInterface{
                         db.get(i).setBalance(amount);
                         clearScreen();
                         System.out.println(
-                                "Do you want to display the balance :\nPress 1 - display blance\nPress 2 - cancel");
+                                "Do you want to display the balance :\nPress 1 - display balance\nPress 2 - cancel");
                         do{
                             int balanceDisplay = scanner.nextInt();
                             response = (balanceDisplay == 1)
@@ -95,14 +95,13 @@ class UserInterface{
                         System.out.println(response);
                     }
 
-                }
+                }while(response.equals("Invalid Amount! , Try again."));
             } else
                 System.out.println("Enter a valid account type");
-        }while(accountType == "unknown");
+        }while(accountType.equals("unknown"));
     }
 
     UserInterface() throws IOException, ParseException {
-//        dataBase();
         userDatabase();
         userVerification();
     }
