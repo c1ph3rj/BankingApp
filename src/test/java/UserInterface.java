@@ -14,7 +14,6 @@ class UserInterface{
 
     private void userDatabase() throws IOException, ParseException {
         Object obj = new JSONParser().parse(new FileReader("C:\\Users\\Temp-user3\\IdeaProjects\\BankingApp\\src\\test\\java\\Database.json"));
-        //FileWriter fileWriter = new FileWriter("D:\\projects\\Java\\intellij\\BankingApp\\src\\test\\java\\Database.json");
         JSONArray DB = (JSONArray) obj;
 
         for (Object item : DB) {
