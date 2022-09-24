@@ -1,0 +1,223 @@
+Index: src/test/java/UserInterface.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import java.io.*;\r\nimport org.json.simple.*;\r\nimport org.json.simple.parser.*;\r\nimport java.util.*;\r\n\r\nclass UserInterface{\r\n    private Scanner scanner = new Scanner(System.in);\r\n    private static List<UserDetails> db = new ArrayList<>();\r\n    private void clearScreen(){\r\n        System.out.print(\"\\033[H\\033[2J\");\r\n        System.out.flush();\r\n        System.out.println(\"\\n__________ Java Bank __________\\n\");\r\n    }\r\n\r\n    private void userDatabase() throws IOException, ParseException {\r\n        Object obj = new JSONParser().parse(new FileReader(\"D:\\\\projects\\\\Java\\\\intellij\\\\BankingApp\\\\src\\\\test\\\\java\\\\Database.json\"));\r\n        //FileWriter fileWriter = new FileWriter(\"D:\\\\projects\\\\Java\\\\intellij\\\\BankingApp\\\\src\\\\test\\\\java\\\\Database.json\");\r\n        JSONArray DB = (JSONArray) obj;\r\n\r\n        for (Object item : DB) {\r\n            String name = (String) ((JSONObject) item).get(\"name\");\r\n            int accountNo = ((Long) ((JSONObject) item).get(\"accountNo\")).intValue();\r\n            int pin = ((Long) ((JSONObject) item).get(\"pin\")).intValue();\r\n            String accountType = (String) ((JSONObject) item).get(\"accountType\");\r\n            int balance = ((Long) ((JSONObject) item).get(\"balance\")).intValue();\r\n            db.add(new UserDetails(name, accountNo\r\n                    , pin, accountType\r\n                    , balance\r\n            ));\r\n        }\r\n    }\r\n\r\n    void userVerification() {\r\n        boolean userVerified = false;\r\n        clearScreen();\r\n        System.out.println(\"Enter your name :\");\r\n        String userName = scanner.nextLine();\r\n        for(int i = 0;i<db.size();i++){\r\n            if (userName.equals(db.get(i).getName())) {\r\n                clearScreen();\r\n                System.out.println(\"Welcome \"+ userName +\"\\nEnter pin :\\n\");\r\n                int noOfAttempts = 1;\r\n                while (noOfAttempts <= 3) {\r\n                    int pin = scanner.nextInt();\r\n                    if (pin == db.get(i).getPin()) {\r\n                        clearScreen();\r\n                        userAccountOperations(db.indexOf(db.get(i)));\r\n                        System.out.println(\"done\");\r\n                        break;\r\n                    } else if (String.valueOf(pin).length() < 4) {\r\n                        System.out.println(((noOfAttempts == 3) ? \"Maximum Attempts reached.\\nThank you!\"\r\n                                : \"wrong pin!,Try again.\"));\r\n                        noOfAttempts++;\r\n                    } else {\r\n                        System.out.println(((noOfAttempts == 3) ? \"Maximum Attempts reached.\\nThank you!\"\r\n                                : \"wrong pin!,Try again.\"));\r\n                        noOfAttempts++;\r\n                    }\r\n                }\r\n                userVerified = true;\r\n            }\r\n        }\r\n        if(!userVerified)\r\n            System.out.println(\"No users found\");\r\n    }\r\n    private void userAccountOperations( int i) {\r\n\r\n        System.out.println(\"Enter account type: \\nPress 1 - Savings account\\nPress 2 - Current Account\\n>>>\");\r\n        String accountType;\r\n        do{\r\n            int accountTypeInput = scanner.nextInt();\r\n            accountType = (accountTypeInput == 1) ? \"Savings\" : (accountTypeInput == 2) ? \"Current\" : \"unknown\";\r\n            if (accountType.equals(db.get(i).getAccountType())) {\r\n                clearScreen();\r\n                System.out.println(\"Enter the amount to be withdraw\\n(note: only in multiples of 100)\\n>>>\");\r\n                String response;\r\n                do{\r\n                    int amount = scanner.nextInt();\r\n                    if (amount < db.get(i).getBalance() && ((amount % 100) == 0)\r\n                            && amount >= 100) {\r\n                        amount = db.get(i).getBalance() - amount;\r\n                        db.get(i).setBalance(amount);\r\n                        clearScreen();\r\n                        System.out.println(\r\n                                \"Do you want to display the balance :\\nPress 1 - display balance\\nPress 2 - cancel\");\r\n                        do{\r\n                            int balanceDisplay = scanner.nextInt();\r\n                            response = (balanceDisplay == 1)\r\n                                    ? (\"Your account balance is : \\n\" + db.get(i).getBalance())\r\n                                    : (balanceDisplay == 2) ? (\"Thank You \" + db.get(i).getName()) : \"Enter a valid option!\";\r\n                            System.out.println(response);\r\n                        }while(response.contains(\"valid option\"));\r\n                    } else{\r\n                        response = \"Invalid Amount! , Try again.\";\r\n                        System.out.println(response);\r\n                    }\r\n\r\n                }while(response.equals(\"Invalid Amount! , Try again.\"));\r\n            } else\r\n                System.out.println(\"Enter a valid account type\");\r\n        }while(accountType.equals(\"unknown\"));\r\n    }\r\n\r\n    UserInterface() throws IOException, ParseException {\r\n        userDatabase();\r\n        userVerification();\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/test/java/UserInterface.java b/src/test/java/UserInterface.java
+--- a/src/test/java/UserInterface.java	(revision e193ef66087af279ee72071445f325b2bbe67b70)
++++ b/src/test/java/UserInterface.java	(date 1663919656485)
+@@ -3,10 +3,10 @@
+ import org.json.simple.parser.*;
+ import java.util.*;
+ 
+-class UserInterface{
++class UserInterface {
+     private Scanner scanner = new Scanner(System.in);
+-    private static List<UserDetails> db = new ArrayList<>();
+-    private void clearScreen(){
++    private static List < UserDetails > db = new ArrayList < > ();
++    private void clearScreen() {
+         System.out.print("\033[H\033[2J");
+         System.out.flush();
+         System.out.println("\n__________ Java Bank __________\n");
+@@ -17,16 +17,13 @@
+         //FileWriter fileWriter = new FileWriter("D:\\projects\\Java\\intellij\\BankingApp\\src\\test\\java\\Database.json");
+         JSONArray DB = (JSONArray) obj;
+ 
+-        for (Object item : DB) {
+-            String name = (String) ((JSONObject) item).get("name");
+-            int accountNo = ((Long) ((JSONObject) item).get("accountNo")).intValue();
+-            int pin = ((Long) ((JSONObject) item).get("pin")).intValue();
+-            String accountType = (String) ((JSONObject) item).get("accountType");
+-            int balance = ((Long) ((JSONObject) item).get("balance")).intValue();
+-            db.add(new UserDetails(name, accountNo
+-                    , pin, accountType
+-                    , balance
+-            ));
++        for (Object item: DB) {
++            String name = (String)((JSONObject) item).get("name");
++            int accountNo = ((Long)((JSONObject) item).get("accountNo")).intValue();
++            int pin = ((Long)((JSONObject) item).get("pin")).intValue();
++            String accountType = (String)((JSONObject) item).get("accountType");
++            int balance = ((Long)((JSONObject) item).get("balance")).intValue();
++            db.add(new UserDetails(name, accountNo, pin, accountType, balance));
+         }
+     }
+ 
+@@ -35,10 +32,10 @@
+         clearScreen();
+         System.out.println("Enter your name :");
+         String userName = scanner.nextLine();
+-        for(int i = 0;i<db.size();i++){
++        for (int i = 0; i < db.size(); i++) {
+             if (userName.equals(db.get(i).getName())) {
+                 clearScreen();
+-                System.out.println("Welcome "+ userName +"\nEnter pin :\n");
++                System.out.println("Welcome " + userName + "\nEnter pin :\n");
+                 int noOfAttempts = 1;
+                 while (noOfAttempts <= 3) {
+                     int pin = scanner.nextInt();
+@@ -48,61 +45,61 @@
+                         System.out.println("done");
+                         break;
+                     } else if (String.valueOf(pin).length() < 4) {
+-                        System.out.println(((noOfAttempts == 3) ? "Maximum Attempts reached.\nThank you!"
+-                                : "wrong pin!,Try again."));
++                        System.out.println(((noOfAttempts == 3) ? "Maximum Attempts reached.\nThank you!" :
++                                "wrong pin!,Try again."));
+                         noOfAttempts++;
+                     } else {
+-                        System.out.println(((noOfAttempts == 3) ? "Maximum Attempts reached.\nThank you!"
+-                                : "wrong pin!,Try again."));
++                        System.out.println(((noOfAttempts == 3) ? "Maximum Attempts reached.\nThank you!" :
++                                "wrong pin!,Try again."));
+                         noOfAttempts++;
+                     }
+                 }
+                 userVerified = true;
+             }
+         }
+-        if(!userVerified)
++        if (!userVerified)
+             System.out.println("No users found");
+     }
+-    private void userAccountOperations( int i) {
++    private void userAccountOperations(int i) {
+ 
+         System.out.println("Enter account type: \nPress 1 - Savings account\nPress 2 - Current Account\n>>>");
+         String accountType;
+-        do{
++        do {
+             int accountTypeInput = scanner.nextInt();
+             accountType = (accountTypeInput == 1) ? "Savings" : (accountTypeInput == 2) ? "Current" : "unknown";
+             if (accountType.equals(db.get(i).getAccountType())) {
+                 clearScreen();
+                 System.out.println("Enter the amount to be withdraw\n(note: only in multiples of 100)\n>>>");
+                 String response;
+-                do{
++                do {
+                     int amount = scanner.nextInt();
+-                    if (amount < db.get(i).getBalance() && ((amount % 100) == 0)
+-                            && amount >= 100) {
++                    if (amount < db.get(i).getBalance() && ((amount % 100) == 0) &&
++                            amount >= 100) {
+                         amount = db.get(i).getBalance() - amount;
+                         db.get(i).setBalance(amount);
+                         clearScreen();
+                         System.out.println(
+                                 "Do you want to display the balance :\nPress 1 - display balance\nPress 2 - cancel");
+-                        do{
++                        do {
+                             int balanceDisplay = scanner.nextInt();
+-                            response = (balanceDisplay == 1)
+-                                    ? ("Your account balance is : \n" + db.get(i).getBalance())
+-                                    : (balanceDisplay == 2) ? ("Thank You " + db.get(i).getName()) : "Enter a valid option!";
++                            response = (balanceDisplay == 1) ?
++                                    ("Your account balance is : \n" + db.get(i).getBalance()) :
++                                    (balanceDisplay == 2) ? ("Thank You " + db.get(i).getName()) : "Enter a valid option!";
+                             System.out.println(response);
+-                        }while(response.contains("valid option"));
+-                    } else{
++                        } while (response.contains("valid option"));
++                    } else {
+                         response = "Invalid Amount! , Try again.";
+                         System.out.println(response);
+                     }
+ 
+-                }while(response.equals("Invalid Amount! , Try again."));
++                } while (response.equals("Invalid Amount! , Try again."));
+             } else
+                 System.out.println("Enter a valid account type");
+-        }while(accountType.equals("unknown"));
++        } while (accountType.equals("unknown"));
+     }
+ 
+     UserInterface() throws IOException, ParseException {
+         userDatabase();
+         userVerification();
+     }
+-}
++}
+\ No newline at end of file
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"6e03af95-1ddf-460b-9fee-3e1881e0ed8e\" name=\"Changes\" comment=\"bankingapp\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/test/java/UserInterface.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/test/java/UserInterface.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"PUSH_TAGS\">\r\n      <GitPushTagMode>\r\n        <option name=\"argument\" value=\"--tags\" />\r\n        <option name=\"title\" value=\"All\" />\r\n      </GitPushTagMode>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2F8meY9cQwwK7Bqs8XQL6xPMMFp\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"Downloaded.Files.Path.Enabled\": \"false\",\r\n    \"Repository.Attach.Annotations\": \"false\",\r\n    \"Repository.Attach.JavaDocs\": \"false\",\r\n    \"Repository.Attach.Sources\": \"false\",\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\r\n    \"last_opened_file_path\": \"C:/Users/JEEVA/Downloads/json-simple-1.1.jar/json-simple-1.1.jar\",\r\n    \"project.structure.last.edited\": \"Modules\",\r\n    \"project.structure.proportion\": \"0.15\",\r\n    \"project.structure.side.proportion\": \"0.2\"\r\n  },\r\n  \"keyToStringList\": {\r\n    \"ChangesTree.GroupingKeys\": [\r\n      \"module\",\r\n      \"directory\"\r\n    ]\r\n  }\r\n}]]></component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"6e03af95-1ddf-460b-9fee-3e1881e0ed8e\" name=\"Changes\" comment=\"\" />\r\n      <created>1663882183398</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1663882183398</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"bankingapp\">\r\n      <created>1663883405654</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1663883405654</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"bankingapp\">\r\n      <created>1663894157609</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1663894157609</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"3\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"bankingapp\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"bankingapp\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision e193ef66087af279ee72071445f325b2bbe67b70)
++++ b/.idea/workspace.xml	(date 1663973786481)
+@@ -28,6 +28,7 @@
+       </GitPushTagMode>
+     </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
++    <option name="UPDATE_TYPE" value="REBASE" />
+   </component>
+   <component name="MarkdownSettingsMigration">
+     <option name="stateVersion" value="1" />
+@@ -38,27 +39,27 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "Downloaded.Files.Path.Enabled": "false",
+-    "Repository.Attach.Annotations": "false",
+-    "Repository.Attach.JavaDocs": "false",
+-    "Repository.Attach.Sources": "false",
+-    "RunOnceActivity.OpenProjectViewOnStart": "true",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+-    "last_opened_file_path": "C:/Users/JEEVA/Downloads/json-simple-1.1.jar/json-simple-1.1.jar",
+-    "project.structure.last.edited": "Modules",
+-    "project.structure.proportion": "0.15",
+-    "project.structure.side.proportion": "0.2"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
++    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
++    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
++    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
++    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
++    &quot;last_opened_file_path&quot;: &quot;C:/Users/JEEVA/Downloads/json-simple-1.1.jar/json-simple-1.1.jar&quot;,
++    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
++    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
++    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
+   },
+-  "keyToStringList": {
+-    "ChangesTree.GroupingKeys": [
+-      "module",
+-      "directory"
++  &quot;keyToStringList&quot;: {
++    &quot;ChangesTree.GroupingKeys&quot;: [
++      &quot;module&quot;,
++      &quot;directory&quot;
+     ]
+   }
+-}]]></component>
++}</component>
+   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+   <component name="TaskManager">
+     <task active="true" id="Default" summary="Default task">
+@@ -82,7 +83,14 @@
+       <option name="project" value="LOCAL" />
+       <updated>1663894157609</updated>
+     </task>
+-    <option name="localTasksCounter" value="3" />
++    <task id="LOCAL-00003" summary="bankingapp">
++      <created>1663894594476</created>
++      <option name="number" value="00003" />
++      <option name="presentableId" value="LOCAL-00003" />
++      <option name="project" value="LOCAL" />
++      <updated>1663894594476</updated>
++    </task>
++    <option name="localTasksCounter" value="4" />
+     <servers />
+   </component>
+   <component name="Vcs.Log.Tabs.Properties">

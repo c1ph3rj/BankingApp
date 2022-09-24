@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="6e03af95-1ddf-460b-9fee-3e1881e0ed8e" name="Changes" comment="bankingapp">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/Database.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/Database.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/UserInterface.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -57,7 +59,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "C:/Users/Temp-user3/IdeaProjects/BankAPP",
+    "last_opened_file_path": "D:/projects/Java/intellij/dump",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2"

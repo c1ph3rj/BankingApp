@@ -7,7 +7,8 @@ import java.util.regex.Pattern;
 
 class UserInterface {
     private final Scanner scanner = new Scanner(System.in);
-    String response = null;
+    String response = "";
+    private JSONArray DB;
     private final List < UserDetails > db = new ArrayList < > ();
     private void clearScreen() {
         System.out.print("\033[H\033[2J");
@@ -16,9 +17,8 @@ class UserInterface {
     }
 
     private void userDatabase() throws IOException, ParseException {
-        Object obj = new JSONParser().parse(new FileReader("C:\\Users\\Temp-user3\\IdeaProjects\\BankingApp\\src\\test\\java\\Database.json"));
-        JSONArray DB = (JSONArray) obj;
-
+        Object obj = new JSONParser().parse(new FileReader("src/test/java/Database.json"));
+        DB = (JSONArray) obj;
         for (Object item: DB) {
             String name = (String)((JSONObject) item).get("name");
             int accountNo = ((Long)((JSONObject) item).get("accountNo")).intValue();
@@ -29,9 +29,14 @@ class UserInterface {
         }
     }
 
-    void userVerification() {
+    private void update() throws IOException {
+        FileWriter fileWriter = new FileWriter("src/test/java/Database.json");
+        fileWriter.write(DB.toJSONString());
+        fileWriter.close();
+    }
+
+    void userVerification() throws IOException {
         boolean userVerified = false;
-        clearScreen();
         System.out.println("Enter your name :");
         String userName = scanner.nextLine();
         for (int i = 0; i < db.size(); i++) {
@@ -68,21 +73,36 @@ class UserInterface {
         if (!userVerified)
             System.out.println("No users found");
     }
-    private void userAccountOperations(int i) {
+    private void userAccountOperations(int i) throws IOException {
         System.out.println("Enter account type: \nPress 1 - Savings account\nPress 2 - Current Account\n>>>");
         String accountType;
         do {
-            int accountTypeInput = scanner.nextInt();
-            accountType = (accountTypeInput == 1) ? "Savings" : (accountTypeInput == 2) ? "Current" : "unknown";
+            String accountTypeInput = scanner.next();
+
+            accountType = (accountTypeInput.equals("1")) ? "Savings" : (accountTypeInput.equals("2")) ? "Current" : "unknown";
             if (accountType.equals(db.get(i).getAccountType())) {
                 clearScreen();
                 System.out.println("Select one of the option below to continue :");
-                System.out.printf("1.Deposit\n2.Withdraw\n3.CheckBalance\n4.ChangePin\npress Q/q to quit.%n");
-                String option = scanner.next();
-                    changePin(i);
-                    deposit(i);
-                    checkBalance(i);
-                    withdrawal(i);
+                System.out.printf("1.Deposit\n2.Withdraw\n3.CheckBalance\n4.ChangePin\npress 5 to quit.%n");
+                Pattern pattern = Pattern.compile("^[1-5]$");
+                do {
+                    String option = scanner.next();
+                    Matcher matcher = pattern.matcher(option);
+                    switch (option) {
+                        case "1" -> deposit(i);
+                        case "2" -> withdrawal(i);
+                        case "3" -> checkBalance(i);
+                        case "4" -> changePin(i);
+                        case "5" -> {
+                                response = "Thank you visit again.";
+                            System.out.println(response);
+                        }
+                        default -> {
+                                response = String.valueOf(matcher.matches());
+                            System.out.println("Enter a valid option from above");
+                        }
+                    }
+                } while (response.equals("false"));
             } else {
                 response = "Enter a valid account type";
                 System.out.println(response);
@@ -94,7 +114,8 @@ class UserInterface {
         System.out.println("Your " + db.get(i).getAccountType() + " Account balance is :\n" + db.get(i).getBalance());
         System.out.println("Thank you " + db.get(i).getName());
     }
-    void displayBalance(int i) {
+    void displayBalance(int i) throws IOException {
+        update();
         clearScreen();
         System.out.println(
                 "Do you want to display the balance :\nPress 1 - display balance\nPress 2 - cancel");
@@ -117,6 +138,7 @@ class UserInterface {
                         amount >= 100) {
                     amount = db.get(i).getBalance() + amount;
                     db.get(i).setBalance(amount);
+                    ((JSONObject) DB.get(i)).replace("balance", amount);
                     displayBalance(i);
                 } else {
                     response = "Invalid Amount! , Try again.";
@@ -128,20 +150,26 @@ class UserInterface {
             }
         } while (response.equals("Invalid Amount! , Try again."));
     }
-    void withdrawal(int i) {
+    void withdrawal(int i) throws IOException {
         clearScreen();
         System.out.println("Enter the amount to be withdraw\n(note: only in multiples of 100)\n>>>");
         do {
-            int amount = scanner.nextInt();
-            if (amount < db.get(i).getBalance() && ((amount % 100) == 0) &&
-                    amount >= 100) {
-                amount = db.get(i).getBalance() - amount;
-                db.get(i).setBalance(amount);
-                displayBalance(i);
-            } else {
+            try {
+                int amount = scanner.nextInt();
+                if (amount < db.get(i).getBalance() && ((amount % 100) == 0) &&
+                        amount >= 100) {
+                    amount = db.get(i).getBalance() - amount;
+                    db.get(i).setBalance(amount);
+                    ((JSONObject) DB.get(i)).replace("balance", amount);
+                    displayBalance(i);
+                    break;
+                } else {
+                    response = "Invalid Amount! , Try again.";
+                }
+            } catch (InputMismatchException e) {
                 response = "Invalid Amount! , Try again.";
-                System.out.println(response);
             }
+            System.out.println(response);
 
         } while (response.equals("Invalid Amount! , Try again."));
     }
@@ -159,6 +187,8 @@ class UserInterface {
                     response = "This is your old pin!\nEnter valid pin to continue.";
                 } else if (matcher.matches()) {
                     response = "Your pin has been Changed successfully\nLogin again to continue.\nThank-you " + db.get(i).getName();
+                    ((JSONObject) DB.get(i)).put("pin", Integer.parseInt(pin));
+                    update();
                 } else {
                     response = "Enter a valid pin";
                 }
@@ -168,6 +198,8 @@ class UserInterface {
             System.out.println(response);
         } while (response.contains("valid"));
     }
+
+
     UserInterface() throws IOException, ParseException {
         userDatabase();
         userVerification();
