@@ -24,7 +24,7 @@ class UserInterface {
         //Method to extract the data and store the values in list of class object from the json file.
         //extracting the data as the object using JSONParser.
         Object obj = new JSONParser().parse(new FileReader("src/test/java/Database.json"));
-        //the JSONObject is in a array form so restore it as a JSON array.
+        //the JSONObject is in an array form so restore it as a JSON array.
         DB = (JSONArray) obj;
         //Looping through the array of object.
         for (Object item: DB) {
